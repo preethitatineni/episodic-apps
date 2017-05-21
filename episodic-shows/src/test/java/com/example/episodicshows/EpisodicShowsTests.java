@@ -1,5 +1,7 @@
 package com.example.episodicshows;
 
+import com.example.episodicshows.shows.Show;
+import com.example.episodicshows.shows.ShowRepository;
 import com.example.episodicshows.user.User;
 import com.example.episodicshows.user.UserRepository;
 import org.junit.Before;
@@ -41,6 +43,9 @@ public class EpisodicShowsTests {
 	@Autowired
 	UserRepository repository;
 
+	@Autowired
+	ShowRepository showRepository;
+
 	@Test
 	@Transactional
 	@Rollback
@@ -52,6 +57,20 @@ public class EpisodicShowsTests {
 		this.mvc.perform(get("/users").contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$[0].email").value("test@test.com"))
+				.andExpect(jsonPath("$[0].id").value(savedUser.getId()));
+	}
+
+	@Test
+	@Transactional
+	@Rollback
+	public void testGetShow() throws Exception {
+		Show show = new Show();
+		show.setName("TestShow");
+		Show savedUser = showRepository.save(show);
+
+		this.mvc.perform(get("/shows").contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$[0].name").value("TestShow"))
 				.andExpect(jsonPath("$[0].id").value(savedUser.getId()));
 	}
 }
