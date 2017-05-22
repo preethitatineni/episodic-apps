@@ -1,9 +1,7 @@
 package com.example.episodicshows.shows;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by trainer6 on 5/21/17.
@@ -16,6 +14,17 @@ public class Show {
     private Long id;
 
     private String name;
+
+    @OneToMany(mappedBy="show_id")
+    private List<Episode> episodes;
+
+    public List<Episode> getEpisodes() {
+        return episodes;
+    }
+
+    public void setEpisodes(List<Episode> episodes) {
+        this.episodes = episodes;
+    }
 
     public Long getId() {
         return id;

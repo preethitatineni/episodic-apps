@@ -1,5 +1,6 @@
 package com.example.episodicshows;
 
+import com.example.episodicshows.shows.Episode;
 import com.example.episodicshows.shows.Show;
 import com.example.episodicshows.shows.ShowRepository;
 import com.example.episodicshows.user.User;
@@ -73,6 +74,44 @@ public class EpisodicShowsTests {
 				.andExpect(jsonPath("$[0].name").value("TestShow"))
 				.andExpect(jsonPath("$[0].id").value(savedUser.getId()));
 	}
+
+	@Test
+	@Transactional
+	@Rollback
+	public void testGetEpisodes() throws Exception{
+		Show show = new Show();
+		show.setName("TestShow");
+
+		Episode episodeOne = new Episode();
+		episodeOne.setEpisode_number(1L);
+		episodeOne.setSeason_number(1L);
+
+		Episode episodeTwo = new Episode();
+		episodeTwo.setEpisode_number(2L);
+		episodeTwo.setSeason_number(1L);
+
+		List<Episode> episodes = new ArrayList<>();
+		episodes.add(episodeOne);
+		episodes.add(episodeTwo);
+
+		show.setEpisodes(episodes);
+
+		Show savedShow = showRepository.save(show);
+
+		this.mvc.perform(get("/shows/" + savedShow.getId() + "/episodes").contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$[0].seasonNumber").value(1))
+				.andExpect(jsonPath("$[0].episodeNumber").value(1))
+				.andExpect(jsonPath("$[0].title").value("S1 E1"))
+				.andExpect(jsonPath("$[1].seasonNumber").value(1))
+				.andExpect(jsonPath("$[1].episodeNumber").value(2))
+				.andExpect(jsonPath("$[1].title").value("S1 E2"));
+
+	}
+
+
+
+
 }
 
 //.andExpect(content().contentType(MediaType.APPLICATION_JSON))

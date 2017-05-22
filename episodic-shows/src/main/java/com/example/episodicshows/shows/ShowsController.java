@@ -1,10 +1,7 @@
 package com.example.episodicshows.shows;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,6 +24,12 @@ public class ShowsController {
     @PostMapping("/shows")
     public Show addShow(@RequestBody Show show){
         return showRepository.save(show);
+    }
+
+    @GetMapping("/shows/{id}/episodes")
+    public List<Episode> getEpisodesForShow(@PathVariable Long id){
+        Show show = showRepository.findOne(id);
+        return show.getEpisodes();
     }
 
 }
