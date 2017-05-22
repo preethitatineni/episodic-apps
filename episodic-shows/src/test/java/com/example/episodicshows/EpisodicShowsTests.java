@@ -5,6 +5,8 @@ import com.example.episodicshows.shows.Show;
 import com.example.episodicshows.shows.ShowRepository;
 import com.example.episodicshows.user.User;
 import com.example.episodicshows.user.UserRepository;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -108,10 +110,28 @@ public class EpisodicShowsTests {
 				.andExpect(jsonPath("$[1].title").value("S1 E2"));
 
 	}
+	@Test
+	@Transactional
+	@Rollback
+	public void testSaveEpisode() throws Exception{
+		Show show = new Show();
+		show.setName("TestShow");
+		Show savedShow = showRepository.save(show);
 
+		Episode episodeToBeSaved = new Episode();
+		episodeToBeSaved.setSeason_number(1L);
+		episodeToBeSaved.setEpisode_number(1L);
 
+		this.mvc.perform(post("/shows/" + savedShow.getId() + "/episodes").contentType(MediaType.APPLICATION_JSON).content("{\n" +
+				"  \"seasonNumber\": 1,\n" +
+				"  \"episodeNumber\": 1\n" +
+				"}"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.seasonNumber").value(1))
+				.andExpect(jsonPath("$.episodeNumber").value(1))
+				.andExpect(jsonPath("$.title").value("S1 E1"));
 
-
+	}
 }
 
 //.andExpect(content().contentType(MediaType.APPLICATION_JSON))

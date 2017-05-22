@@ -54,18 +54,22 @@ public class Episode {
         this.show_id = show_id;
     }
 
+    @JsonProperty("seasonNumber")
     public Long getSeason_number() {
         return season_number;
     }
 
+    @JsonProperty("seasonNumber")
     public void setSeason_number(Long season_number) {
         this.season_number = season_number;
     }
 
+    @JsonProperty("episodeNumber")
     public Long getEpisode_number() {
         return episode_number;
     }
 
+    @JsonProperty("episodeNumber")
     public void setEpisode_number(Long episode_number) {
         this.episode_number = episode_number;
     }
